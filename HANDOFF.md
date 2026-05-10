@@ -2,8 +2,41 @@
 
 Living progress doc. Update on every session boundary so the next pickup has zero ambiguity about where to start.
 
-**Last updated:** 2026-05-10 (Day 3 #12 ignore-weighting wired + ignoreStory action; 73 tests passing)
+**Last updated:** 2026-05-10 (initial commit `ae39734` landed; design-doc Next Steps 1-10 closed; 73 tests passing)
 **Next milestone:** Live smoke of `/api/cron/score` — **STILL GATED on user pasting real profile content into `/profile`**
+
+## Design-doc Next Steps 1-10 status (closed 2026-05-10)
+
+| # | Item | Status |
+|---|---|---|
+| 1 | `git init` + GitHub remote | Local ✅ (commit `ae39734`); **GitHub remote: TODO — see "How to add the GitHub remote" below** |
+| 2 | Clone Horizon, run locally | ✅ DECISIONS.md D1 |
+| 3 | Swappable-persistence gate | ✅ DECISIONS.md D1 — Horizon has no DB, abandoned |
+| 4 | Document decision | ✅ DECISIONS.md D1 |
+| 5 | Scaffold Next.js + TS + Tailwind + shadcn | ✅ Day 1 |
+| 6 | Apply Supabase migration | ✅ `supabase/migrations/20260508000001_initial_schema.sql` + `20260509000001_add_sitemap_source_type.sql`; live Day 3 smoke confirmed applied |
+| 7 | 3 source connectors | ✅ `src/lib/sources/{anthropic-blog,github-trending,hn-algolia}.ts` |
+| 8 | `/api/cron/ingest` + Vercel cron | ✅ `src/app/api/cron/ingest/route.ts` + `vercel.json` `0 13 * * *` |
+| 9 | `/profile` textarea + save | ✅ `src/app/profile/{page,profile-editor,actions}.tsx` |
+| 10 | `/repos` paste-and-fetch | ✅ `src/app/repos/{page,repo-form,repo-row-actions,actions}.tsx` |
+
+### How to add the GitHub remote (last open piece of item 1)
+
+`gh` CLI is not installed locally, so this step needs you. Two paths:
+
+```bash
+# Option A: install gh, then
+brew install gh && gh auth login
+gh repo create daily-ai-updates --private --source=. --remote=origin --push
+
+# Option B: create the repo manually at https://github.com/new (private),
+# then locally:
+git remote add origin git@github.com:<you>/daily-ai-updates.git
+git branch -M main
+git push -u origin main
+```
+
+After the remote exists, Vercel deploy (Day 7) can connect to it.
 
 ---
 
