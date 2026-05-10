@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * daily-ai-updates design tokens
+ *
+ * Aesthetic: Minimal as position, not default.
+ * Dark-only in v1. Light mode is v2 — the :root values are the dark values.
+ *
+ * Design rationale lives in:
+ *   ~/.gstack/projects/daily-ai-updates/truman-nobranch-design-20260507-142511.md
+ *   → "Visual Design" section.
+ *
+ * Strategy: We use shadcn's token names (--background, --foreground, --primary,
+ * --accent, --border, etc.) so shadcn components inherit the look automatically.
+ * We override the VALUES with our design's hex codes. We do NOT add a parallel
+ * --bg / --text / --accent layer — that would require touching every component.
+ *
+ * Token map (shadcn name → our design):
+ *   --background       #0a0a0a   (page bg, near-black not pure black)
+ *   --foreground       #ededed   (body text)
+ *   --primary          #cc7849   (Anthropic warm orange — Try button fill, links)
+ *   --primary-foreground  #0a0a0a (text on the orange)
+ *   --secondary        #141414   (hover surfaces, no-op for cards because we have none)
+ *   --muted            #141414   (input bg, deemphasized surfaces)
+ *   --muted-foreground #9a9a9a   (timestamps, source badges, captions)
+ *   --accent           #141414   (dropdown hover, NOT our brand accent — that's --primary)
+ *   --accent-foreground   #ededed
+ *   --destructive      #e5484d   (Ignore hover only)
+ *   --border           rgba(255,255,255,0.08)  (1px hairlines — Linear's move)
+ *   --input            rgba(255,255,255,0.10)  (slightly more visible than border)
+ *   --ring             #cc7849   (focus ring — uses our brand)
+ *   --radius           0.375rem  (6px — Linear-tight, not bubbly)
+ *
+ * Confusingly, shadcn's --accent is NOT our brand accent. shadcn uses --primary
+ * for the brand, --accent for "subtle interactive surfaces" (dropdown hover etc).
+ * We match that semantic: --primary = #cc7849, --accent = #141414.
+ */
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+
+  --popover: #141414;
+  --popover-foreground: #ededed;
+
+  --primary: #cc7849;
+  --primary-foreground: #0a0a0a;
+
+  --secondary: #141414;
+  --secondary-foreground: #ededed;
+
+  --muted: #141414;
+  --muted-foreground: #9a9a9a;
+
+  --accent: #141414;
+  --accent-foreground: #ededed;
+
+  --destructive: #e5484d;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.10);
+  --ring: #cc7849;
+
+  --radius: 0.375rem;
+
+  /* Charts unused in v1; defaults in case shadcn uses them. */
+  --chart-1: #cc7849;
+  --chart-2: #9a9a9a;
+  --chart-3: #ededed;
+  --chart-4: #6a6a6a;
+  --chart-5: #3a3a3a;
+
+  /* Sidebar unused in v1 (no sidebar layout); defaults match the page. */
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: #cc7849;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #141414;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #cc7849;
+}
+
+/* shadcn's .dark class is what enables dark-mode token swaps. We're dark-only,
+ * so .dark just mirrors :root. No light-mode :root block; if html is missing the
+ * .dark class, you still get our dark theme. */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+  --popover: #141414;
+  --popover-foreground: #ededed;
+  --primary: #cc7849;
+  --primary-foreground: #0a0a0a;
+  --secondary: #141414;
+  --secondary-foreground: #ededed;
+  --muted: #141414;
+  --muted-foreground: #9a9a9a;
+  --accent: #141414;
+  --accent-foreground: #ededed;
+  --destructive: #e5484d;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.10);
+  --ring: #cc7849;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: #cc7849;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #141414;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #cc7849;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* Force dark mode: ship dark-only in v1.
+ * The .dark class on <html> activates shadcn's dark token swaps; without it,
+ * shadcn components use the :root values which we've also set to dark anyway —
+ * but adding the class keeps shadcn's own internal logic happy. */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  /* Establishes a stacking context so body::after sits above the bg but below content. */
+  position: relative;
+  isolation: isolate;
+}
+
+/*
+ * Subtle background grain — kills the flat-dark feel.
+ *
+ * SVG fractal noise inlined as a data URI; rendered at 3% opacity in a
+ * fixed pseudo-element that ignores pointer events. The noise is rasterized
+ * once by the browser when the SVG is decoded, then tiles, so it's
+ * GPU-cheap on scroll.
+ *
+ * baseFrequency=0.9 = fine grain (per-pixel-ish texture, not blotchy)
+ * numOctaves=2 = compromise between texture detail and decode cost
+ * opacity=0.03 = visible only on solid surfaces; invisible behind text
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  opacity: 0.03;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    /* No animation in v1; keep static even when reduced motion is on. */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
+
+/* Reduced motion: respect the user's preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Touch target minimum (Apple HIG, 44px). Apply via .tap-target on
+ * interactive elements that don't already meet it. */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
