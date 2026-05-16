@@ -1,37 +1,33 @@
-import { TopNav } from "@/components/layout/top-nav";
-import { OsintConsole } from "@/components/osint/osint-console";
-import { OSINT_CATEGORIES } from "@/lib/osint-data";
+import { OsintDashboard } from "@/components/osint/dashboard";
+import {
+  OSINT_CATEGORIES,
+  aggregateTelemetry,
+  lookupTrend24h,
+  worldActivityPings,
+} from "@/lib/osint-data";
 
 /**
- * /osint — Live OSINT Console.
+ * /osint — OSINT operations dashboard.
  *
- * A categorized directory of open-source intelligence resources modeled on
- * the OSINT Framework (lockfale/OSINT-Framework), restyled as a live
- * investigation surface. Three panes on desktop:
+ * Dense ops-console style: top status bar, KPI strip, icon sidebar,
+ * resource table with status pills + latency, world activity heatmap,
+ * activity feed, source-health donut, top-tools rank.
  *
- *   ┌─────────────────────────────────────────────────────────────┐
- *   │ TARGET: ▌ ___________________   session 042 · 14:22:08 UTC  │
- *   ├──────────────┬──────────────────────────────┬───────────────┤
- *   │  CATEGORIES  │  RESOURCES                   │  ACTIVITY     │
- *   │              │                              │               │
- *   │  Username 4  │  ─── Sherlock         tool   │  14:21  open  │
- *   │  Email    5  │  ─── WhatsMyName      link   │  14:18  log   │
- *   │  Domain   6  │  ─── Namechk          link   │               │
- *   │  ...         │  ...                         │               │
- *   └──────────────┴──────────────────────────────┴───────────────┘
- *
- * The server component owns nothing but the static category corpus. All
- * interactive state (selected category, target input, activity log) lives
- * in <OsintConsole>, the client child.
- *
- * No persistence in v1 — refresh resets the session. v2 would persist the
- * target + log per user in Supabase, similar to the daily-ai feed pattern.
+ * Server renders the static corpus + deterministic telemetry (so SSR
+ * matches CSR). All interactivity (selected category, target input,
+ * activity log) is handled inside <OsintDashboard>.
  */
 export default function OsintPage() {
+  const telemetry = aggregateTelemetry(OSINT_CATEGORIES);
+  const trend = lookupTrend24h();
+  const pings = worldActivityPings();
+
   return (
-    <>
-      <TopNav />
-      <OsintConsole categories={OSINT_CATEGORIES} />
-    </>
+    <OsintDashboard
+      categories={OSINT_CATEGORIES}
+      telemetry={telemetry}
+      trend={trend}
+      pings={pings}
+    />
   );
 }
